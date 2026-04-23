@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProjX — Developer Acquisition Calculator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0f; color: #f0f0f0; min-height: 100vh; }
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 28px 40px;
+    border-bottom: 2px solid #c9a84c;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .logo { font-size: 26px; font-weight: 900; color: #c9a84c; letter-spacing: -1px; }
+  .header h1 { font-size: 20px; font-weight: 700; color: #fff; }
+  .header p { font-size: 12px; color: #888; margin-top: 3px; }
+  .container { max-width: 880px; margin: 36px auto; padding: 0 24px; }
+  .card { background: #13131f; border: 1px solid #2a2a3e; border-radius: 12px; padding: 28px; margin-bottom: 20px; }
+  .card h2 { font-size: 13px; font-weight: 700; color: #c9a84c; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid #2a2a3e; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 11px; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 0.5px; }
+  .field input {
+    background: #0d0d18; border: 1px solid #2a2a3e; border-radius: 8px;
+    padding: 11px 14px; font-size: 15px; color: #fff; outline: none;
+    transition: border-color 0.2s; width: 100%;
+  }
+  .field input:focus { border-color: #c9a84c; }
+  .field input[type="range"] { padding: 6px 0; border: none; background: transparent; cursor: pointer; accent-color: #c9a84c; }
+  .range-row { display: flex; align-items: center; gap: 12px; }
+  .range-row input[type="range"] { flex: 1; }
+  .range-val { min-width: 80px; text-align: right; font-size: 18px; font-weight: 800; color: #c9a84c; }
+  .results { background: linear-gradient(135deg, #0e1e0e 0%, #0a150a 100%); border: 1px solid #2a4a2a; border-radius: 12px; padding: 28px; margin-bottom: 20px; }
+  .results h2 { font-size: 13px; font-weight: 700; color: #5aad5a; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 22px; padding-bottom: 10px; border-bottom: 1px solid #2a4a2a; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi { background: rgba(0,0,0,0.35); border-radius: 10px; padding: 16px; text-align: center; border: 1px solid #1e3a1e; }
+  .kpi .lbl { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+  .kpi .val { font-size: 22px; font-weight: 800; color: #5aad5a; }
+  .kpi .sub { font-size: 11px; color: #555; margin-top: 4px; }
+  .kpi.gold .val { color: #c9a84c; }
+  .kpi.white .val { color: #eee; }
+  .pitch { background: #080f08; border: 1px solid #2a4a2a; border-radius: 10px; padding: 20px; }
+  .pitch h3 { font-size: 13px; color: #5aad5a; font-weight: 700; margin-bottom: 14px; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid #131e13; font-size: 13px; }
+  .row:last-child { border-bottom: none; }
+  .row .lbl { color: #888; }
+  .row .amt { font-weight: 700; }
+  .row .amt.g { color: #5aad5a; }
+  .row .amt.y { color: #c9a84c; }
+  .row .amt.w { color: #eee; }
+  .badge { display: inline-block; background: #c9a84c22; color: #c9a84c; border: 1px solid #c9a84c44; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; margin-left: 8px; }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } .kpi-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">PX</div>
+  <div>
+    <h1>Developer Acquisition Calculator — Land Subdivisions</h1>
+    <p>ProjX Australia · Confidential · For internal use in developer meetings</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Inputs -->
+  <div class="card">
+    <h2>Project Details</h2>
+    <div class="grid-2" style="margin-bottom:18px;">
+      <div class="field">
+        <label>Number of Lots</label>
+        <input type="number" id="numLots" value="50" min="1" oninput="calc()">
+      </div>
+      <div class="field">
+        <label>Average Price Per Lot ($)</label>
+        <input type="number" id="avgPrice" value="450000" min="0" oninput="calc()">
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="field">
+        <label>Developer Profit Margin (%)</label>
+        <div class="range-row">
+          <input type="range" id="marginSlider" min="5" max="40" step="1" value="20" oninput="calc()">
+          <span class="range-val" id="marginVal">20%</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>ProjX Commission (% of lot price)</label>
+        <div class="range-row">
+          <input type="range" id="commPctSlider" min="0.5" max="5" step="0.1" value="2" oninput="calc()">
+          <span class="range-val" id="commPctVal">2.0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results">
+    <h2>💰 Live Results</h2>
+    <div class="kpi-row">
+      <div class="kpi gold">
+        <div class="lbl">Comm Per Lot</div>
+        <div class="val" id="kpi_commPerLot">$9,000</div>
+        <div class="sub" id="kpi_commPctSub">2.0% of lot price</div>
+      </div>
+      <div class="kpi gold">
+        <div class="lbl">Total Commission</div>
+        <div class="val" id="kpi_totalComm">$450K</div>
+        <div class="sub" id="kpi_totalCommSub">50 lots</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">Gross Revenue</div>
+        <div class="val white" id="kpi_grossRev">$22.5M</div>
+        <div class="sub" id="kpi_grossRevSub">50 × $450K</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">Developer Profit</div>
+        <div class="val" id="kpi_devProfit">$4.5M</div>
+        <div class="sub" id="kpi_marginSub">20% margin</div>
+      </div>
+    </div>
+
+    <div class="pitch">
+      <h3>📋 Meeting Pitch — What to Say</h3>
+      <div class="row">
+        <span class="lbl">Gross revenue (all lots)</span>
+        <span class="amt w" id="p_grossRev">$22,500,000</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Their estimated profit <span class="badge" id="p_marginBadge">20% margin</span></span>
+        <span class="amt g" id="p_devProfit">$4,500,000</span>
+      </div>
+      <div class="row">
+        <span class="lbl">ProjX commission <span class="badge" id="p_commBadge">2.0% per lot</span></span>
+        <span class="amt y" id="p_totalComm">$450,000</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Commission as % of their profit</span>
+        <span class="amt w" id="p_commOfProfit">10.0%</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Comm per lot</span>
+        <span class="amt y" id="p_commPerLot">$9,000 per lot</span>
+      </div>
+      <div class="row">
+        <span class="lbl">Their profit after commission</span>
+        <span class="amt g" id="p_netAfterComm">$4,050,000</span>
+      </div>
+      <div class="row" style="margin-top:6px;padding-top:14px;border-top:1px solid #2a4a2a;border-bottom:none;">
+        <span class="lbl" style="color:#aaa;font-size:12px;">💬 "We remove all sales risk. You keep your profit margin. We do the work. This is what we charge."</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meeting notes -->
+  <div class="card">
+    <h2>Meeting Notes</h2>
+    <div class="grid-2">
+      <div class="field">
+        <label>Developer / Company Name</label>
+        <input type="text" placeholder="e.g. ABC Developments Pty Ltd">
+      </div>
+      <div class="field">
+        <label>Project Name / Location</label>
+        <input type="text" placeholder="e.g. Riverside Estate, Ipswich">
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function fmt(n) {
+    if (n >= 1000000) return '$' + (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+    if (n >= 1000) return '$' + (n/1000).toFixed(0) + 'K';
+    return '$' + n.toFixed(0);
+  }
+  function fmtFull(n) {
+    return '$' + n.toLocaleString('en-AU', {minimumFractionDigits:0, maximumFractionDigits:0});
+  }
+
+  function calc() {
+    const lots = parseFloat(document.getElementById('numLots').value) || 0;
+    const avgPrice = parseFloat(document.getElementById('avgPrice').value) || 0;
+    const margin = parseFloat(document.getElementById('marginSlider').value) || 0;
+    const commPct = parseFloat(document.getElementById('commPctSlider').value) || 0;
+
+    document.getElementById('marginVal').textContent = margin + '%';
+    document.getElementById('commPctVal').textContent = commPct.toFixed(1) + '%';
+
+    const grossRev = lots * avgPrice;
+    const devProfit = grossRev * (margin / 100);
+    const commPerLot = avgPrice * (commPct / 100);
+    const totalComm = lots * commPerLot;
+    const commOfProfit = devProfit > 0 ? (totalComm / devProfit * 100) : 0;
+    const netAfterComm = devProfit - totalComm;
+
+    document.getElementById('kpi_commPerLot').textContent = fmtFull(commPerLot);
+    document.getElementById('kpi_commPctSub').textContent = commPct.toFixed(1) + '% of lot price';
+    document.getElementById('kpi_totalComm').textContent = fmt(totalComm);
+    document.getElementById('kpi_totalCommSub').textContent = lots + ' lots';
+    document.getElementById('kpi_grossRev').textContent = fmt(grossRev);
+    document.getElementById('kpi_grossRevSub').textContent = lots + ' × ' + fmt(avgPrice);
+    document.getElementById('kpi_devProfit').textContent = fmt(devProfit);
+    document.getElementById('kpi_marginSub').textContent = margin + '% margin';
+
+    document.getElementById('p_grossRev').textContent = fmtFull(grossRev);
+    document.getElementById('p_devProfit').textContent = fmtFull(devProfit);
+    document.getElementById('p_marginBadge').textContent = margin + '% margin';
+    document.getElementById('p_totalComm').textContent = fmtFull(totalComm);
+    document.getElementById('p_commBadge').textContent = commPct.toFixed(1) + '% per lot';
+    document.getElementById('p_commOfProfit').textContent = commOfProfit.toFixed(1) + '%';
+    document.getElementById('p_commPerLot').textContent = fmtFull(commPerLot) + ' per lot';
+    document.getElementById('p_netAfterComm').textContent = fmtFull(netAfterComm);
+  }
+
+  calc();
+</script>
+</body>
+</html>
